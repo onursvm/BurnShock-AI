@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BurnShock AI — Fast Food & Workout Shock Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-fire-burner"></i>
+        </div>
+        <div>
+          <h1>BurnShock <span>AI</span></h1>
+          <p class="tagline" data-i18n="tagline">Fast Food & Cheat Meal Workout Shock Classifier</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <!-- TR / EN Kayan Switch (Sliding Toggle) -->
+        <div class="lang-switch-container">
+          <div class="lang-switch-track" id="langSwitch">
+            <div class="lang-switch-slider" id="langSlider"></div>
+            <button type="button" class="lang-btn active" id="btnTR" onclick="setLanguage('tr')">TR</button>
+            <button type="button" class="lang-btn" id="btnEN" onclick="setLanguage('en')">EN</button>
+          </div>
+        </div>
+
+        <div class="model-badge">
+          <i class="fa-solid fa-brain"></i>
+          <span>PyTorch AI</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid-layout">
+      <!-- Sol Taraf: Giriş Formu -->
+      <section class="card form-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-utensils"></i> <span data-i18n="formTitle">Öğün ve Tüketici Bilgileri</span></h2>
+          <p data-i18n="formSubtitle">Yediğiniz veya planladığınız cheat meal detaylarını girin</p>
+        </div>
+
+        <form id="predictionForm">
+          <!-- Hızlı Şablonlar -->
+          <div class="preset-wrapper">
+            <span class="preset-title" data-i18n="presetTitle">Örnek Senaryo Yükle:</span>
+            <div class="preset-buttons">
+              <button type="button" class="preset-btn" onclick="applyPreset('burger')" data-i18n="presetBurger">🍔 Double Burger Binge</button>
+              <button type="button" class="preset-btn" onclick="applyPreset('pizza')" data-i18n="presetPizza">🍕 Pizza Feast</button>
+              <button type="button" class="preset-btn" onclick="applyPreset('light')" data-i18n="presetLight">🥗 Dengeli / Hafif</button>
+            </div>
+          </div>
+
+          <!-- Kategori Seçimleri -->
+          <div class="form-section">
+            <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> <span data-i18n="secGeneral">Genel Tercihler</span></h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="fast_food_chain" data-i18n="lblChain">Restoran Zinciri</label>
+                <div class="select-wrapper">
+                  <select id="fast_food_chain" name="fast_food_chain" required>
+                    <option value="Burger King">Burger King</option>
+                    <option value="Domino's Pizza">Domino's Pizza</option>
+                    <option value="Five Guys">Five Guys</option>
+                    <option value="KFC">KFC</option>
+                    <option value="McDonald's" selected>McDonald's</option>
+                    <option value="Starbucks">Starbucks</option>
+                    <option value="Subway">Subway</option>
+                    <option value="Taco Bell">Taco Bell</option>
+                    <option value="Wendy's">Wendy's</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="meal_category" data-i18n="lblMeal">Menü / Öğün Türü</label>
+                <div class="select-wrapper">
+                  <select id="meal_category" name="meal_category" required>
+                    <option value="Dessert Overload & Large Shake" data-i18n="catDessert">Tatlı Bombası & Büyük Shake</option>
+                    <option value="Double Burger & Large Fry" data-i18n="catBurger" selected>Double Burger & Büyük Boy Patates</option>
+                    <option value="Fried Chicken Bucket & Slaw" data-i18n="catChicken">Kızarmış Tavuk Kovası & Salata</option>
+                    <option value="Late-Night Value Menu Binge" data-i18n="catLateNight">Gece Ekonomik Menü Tıkınması</option>
+                    <option value="Loaded Burrito, Nachos & Soda" data-i18n="catBurrito">Dolu Burrito, Nachos & Gazlı İçecek</option>
+                    <option value="Pizza Feast & Cheesy Bread" data-i18n="catPizza">Pizza Ziyafeti & Peynirli Ekmek</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="consumer_gender" data-i18n="lblGender">Cinsiyet</label>
+                <div class="select-wrapper">
+                  <select id="consumer_gender" name="consumer_gender" required>
+                    <option value="Male" data-i18n="genderMale" selected>Erkek</option>
+                    <option value="Female" data-i18n="genderFemale">Kadın</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="fitness_level" data-i18n="lblFitness">Fitness / Egzersiz Seviyesi</label>
+                <div class="select-wrapper">
+                  <select id="fitness_level" name="fitness_level" required>
+                    <option value="Sedentary" data-i18n="fitSedentary">Hareketsiz (Sedanter)</option>
+                    <option value="Moderately Active" data-i18n="fitModerate" selected>Orta Düzey Aktif</option>
+                    <option value="Highly Trained" data-i18n="fitHigh">İleri Düzey Antrenmanlı</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Makro ve Besin Değerleri -->
+          <div class="form-section">
+            <h3 class="section-title"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="secNutrients">Besin Değerleri & Kalori</span></h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="total_calories" data-i18n="lblCalories">Toplam Kalori (kcal)</label>
+                <input type="number" id="total_calories" name="total_calories" value="1650" min="100" max="6000" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="item_count" data-i18n="lblItemCount">Ürün / Porsiyon Adedi</label>
+                <input type="number" id="item_count" name="item_count" value="3" min="1" max="10" step="1" required>
+              </div>
+
+              <div class="form-group">
+                <label for="carb_grams" data-i18n="lblCarbs">Karbonhidrat (gr)</label>
+                <input type="number" id="carb_grams" name="carb_grams" value="175" min="0" max="500" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="sugar_grams" data-i18n="lblSugar">Şeker (gr)</label>
+                <input type="number" id="sugar_grams" name="sugar_grams" value="65" min="0" max="300" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="protein_grams" data-i18n="lblProtein">Protein (gr)</label>
+                <input type="number" id="protein_grams" name="protein_grams" value="55" min="0" max="300" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="fat_grams" data-i18n="lblFat">Toplam Yağ (gr)</label>
+                <input type="number" id="fat_grams" name="fat_grams" value="85" min="0" max="300" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="saturated_fat_grams" data-i18n="lblSatFat">Doymuş Yağ (gr)</label>
+                <input type="number" id="saturated_fat_grams" name="saturated_fat_grams" value="32" min="0" max="150" step="any" required>
+              </div>
+
+              <div class="form-group">
+                <label for="sodium_mg" data-i18n="lblSodium">Sodyum (mg)</label>
+                <input type="number" id="sodium_mg" name="sodium_mg" value="2450" min="100" max="9000" step="any" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kişisel Bilgiler -->
+          <div class="form-section">
+            <h3 class="section-title"><i class="fa-solid fa-user"></i> <span data-i18n="secPhysical">Fiziksel Bilgiler</span></h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="consumer_age" data-i18n="lblAge">Yaş</label>
+                <input type="number" id="consumer_age" name="consumer_age" value="27" min="15" max="90" required>
+              </div>
+              <div class="form-group">
+                <label for="consumer_weight_kg" data-i18n="lblWeight">Kilo (kg)</label>
+                <input type="number" id="consumer_weight_kg" name="consumer_weight_kg" value="78" min="35" max="180" step="0.5" required>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="submit-btn">
+            <span class="btn-text"><i class="fa-solid fa-bolt"></i> <span data-i18n="btnCalculate">Antrenman Şokunu Hesapla</span></span>
+            <span class="spinner" style="display:none;"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-i18n="btnCalculating">Hesaplanıyor...</span></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Sağ Taraf: Sonuç Paneli -->
+      <section class="card result-card" id="resultContainer">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">
+            <i class="fa-solid fa-dumbbell"></i>
+          </div>
+          <h3 data-i18n="emptyTitle">Tahmin Bekleniyor</h3>
+          <p data-i18n="emptyDesc">Soldaki parametreleri doldurup "Antrenman Şokunu Hesapla" butonuna basın. Yapay zeka modelimiz yakım ihtiyacınızı sınıflandırsın.</p>
+        </div>
+
+        <div class="result-content" id="resultBox" style="display: none;">
+          <div class="result-badge-wrap">
+            <span class="badge" id="shockBadge">Orta Seviye</span>
+            <span class="confidence-tag"><span data-i18n="lblConfidence">Güven Oranı:</span> <strong id="confidenceVal">%94.2</strong></span>
+          </div>
+
+          <h2 class="result-title" id="shockTitle">Yüksek Terleme Cezası</h2>
+          <p class="result-desc" id="shockDesc"></p>
+
+          <div class="recommendation-box">
+            <div class="rec-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div class="rec-content">
+              <h4 data-i18n="coachAdvice">Antrenör Tavsiyesi</h4>
+              <p id="shockSuggestion"></p>
+            </div>
+          </div>
+
+          <!-- Olasılık Dağılımı -->
+          <div class="distribution-section">
+            <h4><i class="fa-solid fa-chart-simple"></i> <span data-i18n="probTitle">Sınıf Olasılık Dağılımı</span></h4>
+            <div class="prob-list" id="probList">
+              <!-- Dinamik Bar Listesi -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Fast Food Cheat Meal Workout Burn — PyTorch & FastAPI Web Application</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
